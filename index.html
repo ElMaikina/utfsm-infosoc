@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>InfoSoc</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      canvas {
+        background: #eee;
+        position: absolute;
+		top: 50%;
+		left: 50%;
+		-ms-transform: translate(-50%, -50%);
+  		transform: translate(-50%, -50%);
+      }
+      textarea {
+        background: #eee;
+        position: absolute;
+		top: 50%;
+		left: 50%;
+		-ms-transform: translate(-200%, -600%);
+  		transform: translate(-200%, -600%);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="Nombre del Juego" width="1920" height="1080"></canvas>
+    <script>
+		class GameObj {
+			constructor(x, y, height, width, color) {
+				this.x = x;
+				this.y = y;
+				this.height = height;
+				this.width = width;
+				this.color = color;
+			}
+			draw() {
+				ctx.beginPath();
+				ctx.rect(this.x, this.y, this.width, this.height);
+				ctx.fillStyle = this.color;
+				ctx.fill();
+				ctx.closePath();
+			}
+			move(velx, vely) {
+				this.x += velx;
+				this.y += vely;
+			}
+		}
+		var canvas = document.getElementById("Nombre del Juego");
+		var ctx = canvas.getContext("2d");
+		
+		jugador = new GameObj(500, 500, 150, 150, "#ff0000");
+		jugador.draw();
+
+		function GameLoop() {
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			jugador.move(0.5, 0);
+			jugador.draw();
+			
+  			ctx.font = "80px serif";
+  			ctx.fillText("move(1, 0)", 10, 100);
+  			ctx.fillText("wait(0)", 10, 190);
+		}
+		setInterval(GameLoop, 1);
+    </script>
+  </body>
+</html>
+

@@ -1,4 +1,8 @@
-# Integrantes del Proyecto
+# Pensamiento Computacional
+
+Conjunto de material educativo para ensenar Python y fundamentos computacionales.
+
+## Integrantes del Proyecto
 
 * Miguel Soto - Rol: 201973623-K
 * Luciano Yevenes - Rol: 202173514-3

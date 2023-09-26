@@ -1,86 +1,69 @@
 import pygame
 import sys
 
-class BloqueConTexto(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, fpath, fsize, fncolor, fscolor, bncolor, bscolor, text):
-        super().__init__()
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.fpath = fpath
-        self.fsize = fsize
-        self.fncolor = fncolor
-        self.fscolor = fscolor
-        self.bncolor = bncolor
-        self.bscolor = bscolor
-        self.text = text
-
-        self.font = pygame.font.Font(fpath, fsize)
-        self.text_surf = self.font.render(text, True, fncolor)
-
-        self.surf = pygame.Surface((self.width, self.height))
-        self.surf.fill(bncolor)
-        self.rect = self.surf.get_rect(center = (self.x, self.y))
-
-# Initialize Pygame
+# Inicializar Pygame
 pygame.init()
 
-# Set up the screen
-width, height = 960, 540
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption('Pensamiento Computacional')
+# Configuración de la pantalla
+screen_width = 1920
+screen_height = 1080
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Rectángulos con Texto")
 
-## Define text parameters
-font_path = 'space-mono.ttf'  # Replace with the path to your font file
-font_size = 36
-font = pygame.font.Font(font_path, font_size)
-text_color_default = (255, 255, 255)  # Default text color (white)
-text_color_hover = (255, 0, 0)  # Text color on hover (red)
-#text = 'Pensamiento Computacional'
-text1 = "¿Cómo se declara una variable entera?"
-text2 = "(Responde de forma honesta porfavor)"
+# Colores
+white = (255, 255, 255)
 
-hovered = False  # Track if the mouse pointer is over the text
+header_color = (174, 129, 255)
+
+option_colors = [(249, 38, 114), (166, 226, 46), (102, 217, 239), (253, 151, 31)]
+
+# Reloj para controlar la velocidad de fotogramas
+clock = pygame.time.Clock()
+
+# Función para dibujar un rectángulo con texto
+def dibujar_encabezado_texto(x, y, width, height, color, text):
+    pygame.draw.rect(screen, color, (x - width//2, y - height//2, width, height))
+    font = pygame.font.Font('space-mono.ttf', 62)
+    text_surface = font.render(text, True, white)
+    text_rect = text_surface.get_rect(center=(x, y))
+    screen.blit(text_surface, text_rect)
+
+# Función para dibujar un rectángulo con texto
+def dibujar_parrafo_texto(x, y, width, height, color, text):
+    pygame.draw.rect(screen, color, (x - width//2, y - height//2, width, height))
+    font = pygame.font.Font('space-mono.ttf', 30)
+    text_surface = font.render(text, True, white)
+    text_rect = text_surface.get_rect(center=(x, y))
+    screen.blit(text_surface, text_rect)
+
+
+# Bucle principal del juego
 running = True
 
-# Main game loop
 while running:
-
-    pressed_keys = pygame.key.get_pressed()
-
-	# See if the window has closed
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
+            running = False
 
-    if pressed_keys[pygame.K_ESCAPE]:
-        pygame.quit()
-        sys.exit()
-    # Clear the screen
+    # Lógica del juego aquí
+
+    # Limpia la pantalla
     screen.fill((0, 0, 0))
 
-    # Create a text surface with the appropriate color
-    text_color = text_color_hover if hovered else text_color_default
-    text_surface1 = font.render(text1, True, text_color)
-    text_surface2 = font.render(text2, True, text_color)
-
-
-    # Get the bounding rectangle for the text surface
-    text_rect1 = text_surface1.get_rect(center=(width // 2, height // 2))
-    text_rect2 = text_surface2.get_rect(center=(width // 2, height // 2 + 32))
-
-    #for e in elementos:
-    #    screen.blit(e.text_surf, e.rect)
-    #
-    # Blit (draw) the text surface onto the screen
-    screen.blit(text_surface1, text_rect1)
-    screen.blit(text_surface2, text_rect2)
-
+    # Dibuja rectángulos con texto
+    dibujar_encabezado_texto(screen_width/2, 300, 1600, 300, header_color, "¿Como se declara un entero en Python?")
+    dibujar_parrafo_texto(screen_width/2 - 320, 600, 600, 200, option_colors[0], "variable = 0")
+    dibujar_parrafo_texto(screen_width/2 + 320, 600, 600, 200, option_colors[1], "int variable = 0")
+    dibujar_parrafo_texto(screen_width/2 - 320, 850, 600, 200, option_colors[2], "def variable():")
+    dibujar_parrafo_texto(screen_width/2 + 320, 850, 600, 200, option_colors[3], "declare int")
+    
+    
+    # Actualiza la pantalla
     pygame.display.flip()
 
-# Quit Pygame
+    # Limita la velocidad de fotogramas a 60 FPS
+    clock.tick(60)
+
+# Salir del juego
 pygame.quit()
 sys.exit()
-

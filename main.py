@@ -1,6 +1,18 @@
 import pygame
 import sys
 
+class superficie_pregunta(pygame.Surface):
+    def __init__(self):
+        super().__init__(self)
+
+
+
+
+
+
+
+
+
 # Initialize Pygame
 pygame.init()
 
@@ -15,7 +27,8 @@ font_size = 36
 font = pygame.font.Font(font_path, font_size)
 text_color_default = (255, 255, 255)  # Default text color (white)
 text_color_hover = (255, 0, 0)  # Text color on hover (red)
-text = 'Pensamiento Computacional'
+#text = 'Pensamiento Computacional'
+text = "¿Cómo se declara una variable entera?"
 
 # Main game loop
 hovered = False  # Track if the mouse pointer is over the text

@@ -79,9 +79,9 @@ while running:
     # Acelera el UI
     if abs(vx) < maxvx:
         if pressed_keys[pygame.K_RIGHT]:
-            vx += 8
+            vx += 16
         if pressed_keys[pygame.K_LEFT]:
-            vx -= 8
+            vx -= 16
 
     if x % screen_width == 0:
         if not pressed_keys[pygame.K_RIGHT] and not pressed_keys[pygame.K_LEFT]:

@@ -61,12 +61,10 @@ screen_height = 1080
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Pensamiento Computacional")
 
-# Posicion X del UI
+# Posicion, velocidad y aceleracion X del UI
 x = 0
-
-# Velocidad de X del UI
 vx = 0
-maxvx = 192
+speed = screen_width // 20
 
 while running:
     for event in pygame.event.get():
@@ -75,22 +73,27 @@ while running:
     
     # Lee las teclas oprimidas
     pressed_keys = pygame.key.get_pressed()
-    
-    # Acelera el UI
-    if abs(vx) < maxvx:
-        if pressed_keys[pygame.K_RIGHT]:
-            vx += 16
-        if pressed_keys[pygame.K_LEFT]:
-            vx -= 16
 
+    # Acelera el UI
     if x % screen_width == 0:
+        if pressed_keys[pygame.K_RIGHT] and x < (len(arreglo_preguntas) - 1) * screen_width:
+            vx = speed
+
+        elif pressed_keys[pygame.K_LEFT] and x > 0:
+            vx = -speed
+
         if not pressed_keys[pygame.K_RIGHT] and not pressed_keys[pygame.K_LEFT]:
             vx = 0
 
+    if x + vx < 0:
+        x = 0
+        vx = 0
+    
+    if x + vx > (len(arreglo_preguntas) - 1) * screen_width:
+        x = (len(arreglo_preguntas) - 1) * screen_width
+        vx = 0
+        
     x += vx
-
-    # Muestra el valor de X
-    print(f"El valor de X es: {x}")
 
     # Limpia la pantalla
     screen.fill((0, 0, 0))

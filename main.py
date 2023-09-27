@@ -1,4 +1,5 @@
 import pygame
+import random
 import sys
 
 # Colores
@@ -44,10 +45,9 @@ class Pregunta():
 running = True
 
 arreglo_preguntas = []
-arreglo_preguntas.append(Pregunta("Primera pregunta", ["a", "b", "c", "d"]))
-arreglo_preguntas.append(Pregunta("Segunda pregunta", ["11", "2", "31", "4"]))
-arreglo_preguntas.append(Pregunta("Tercera pregunta", ["4", "3", "2", "1"]))
-arreglo_preguntas.append(Pregunta("Cuarta pregunta", ["A", "B", "X", "Y"]))
+arreglo_preguntas.append(Pregunta("¿Cómo se declara una variable X entera?", ["def X():", "X = 0", "int X = 0;", "declare X"]))
+arreglo_preguntas.append(Pregunta("Indique como se define una función \"func\"", ["def func():", "func = []", "\"func\"", "func = True"]))
+arreglo_preguntas.append(Pregunta("Señale la opción que muestre un String", ["string = \"string\"", "string = 6", "string = 'c'", "string = [0, 5, 1, -8]"]))
 
 # Reloj para controlar la velocidad de fotogramas
 clock = pygame.time.Clock()
@@ -70,7 +70,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
+
     # Lee las teclas oprimidas
     pressed_keys = pygame.key.get_pressed()
 
@@ -111,10 +111,9 @@ while running:
         pregunta_i+= 1
     
     dibujar_estadistica_texto(160, 60, "# enunciado de la pregunta", "")
-    dibujar_estadistica_texto(30, 1080 - 120, "# nombre del jugador", "player = \"ElMaikina\"")
+    dibujar_estadistica_texto(60, 1080 - 120, "# nombre del jugador", "player = \"ElMaikina\"")
     dibujar_estadistica_texto(800, 1080 - 120, "# tiempo restante", "time = 35:46")
-    dibujar_estadistica_texto(1350, 1080 - 120, "# arreglo de preguntas totales", "questions = [0, 0, 0, 0, 0, 0, 0, 0]")
-    
+    dibujar_estadistica_texto(1350 - 30, 1080 - 120, "# arreglo de preguntas totales", "questions = [0, 0, 0, 0, 0, 0, 0, 0]")
     
     # Actualiza la pantalla
     pygame.display.flip()

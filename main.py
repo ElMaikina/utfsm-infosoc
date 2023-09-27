@@ -1,23 +1,11 @@
 import pygame
 import sys
 
-# Inicializar Pygame
-pygame.init()
-
-# Configuración de la pantalla
-screen_width = 1920
-screen_height = 1080
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("Rectángulos con Texto")
-
 # Colores
 white = (255, 255, 255)
 grey = (66, 66, 66)
 header_color = (174, 129, 255)
 option_colors = [(249, 38, 114), (166, 226, 46), (102, 217, 239), (253, 151, 31)]
-
-# Reloj para controlar la velocidad de fotogramas
-clock = pygame.time.Clock()
 
 # Función para dibujar un rectángulo con texto
 def dibujar_encabezado_texto(x, y, width, height, color, text):
@@ -47,29 +35,82 @@ def dibujar_estadistica_texto(x, y, text1, text2):
     screen.blit(text_surface1, text_rect1)
     screen.blit(text_surface2, text_rect2)
 
+class Pregunta():
+    def __init__(self, enunciado, opciones):
+        self.enunciado = enunciado
+        self.opciones = opciones
+
 # Bucle principal del juego
 running = True
+
+arreglo_preguntas = []
+arreglo_preguntas.append(Pregunta("Primera pregunta", ["a", "b", "c", "d"]))
+arreglo_preguntas.append(Pregunta("Segunda pregunta", ["11", "2", "31", "4"]))
+arreglo_preguntas.append(Pregunta("Tercera pregunta", ["4", "3", "2", "1"]))
+arreglo_preguntas.append(Pregunta("Cuarta pregunta", ["A", "B", "X", "Y"]))
+
+# Reloj para controlar la velocidad de fotogramas
+clock = pygame.time.Clock()
+
+# Inicializar Pygame
+pygame.init()
+
+# Configuración de la pantalla
+screen_width = 1920
+screen_height = 1080
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Pensamiento Computacional")
+
+# Posicion X del UI
+x = 0
+
+# Velocidad de X del UI
+vx = 0
+maxvx = 192
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    
+    # Lee las teclas oprimidas
+    pressed_keys = pygame.key.get_pressed()
+    
+    # Acelera el UI
+    if abs(vx) < maxvx:
+        if pressed_keys[pygame.K_RIGHT]:
+            vx += 8
+        if pressed_keys[pygame.K_LEFT]:
+            vx -= 8
 
-    # Lógica del juego aquí
+    if x % screen_width == 0:
+        if not pressed_keys[pygame.K_RIGHT] and not pressed_keys[pygame.K_LEFT]:
+            vx = 0
+
+    x += vx
+
+    # Muestra el valor de X
+    print(f"El valor de X es: {x}")
 
     # Limpia la pantalla
     screen.fill((0, 0, 0))
 
+    # Numero actual de la pregunta
+    pregunta_i = 0
+
     # Dibuja rectángulos con texto
-    dibujar_encabezado_texto(screen_width/2, 300 - 60, 1600, 300, header_color, "¿Como se declara un entero en Python?")
-    dibujar_parrafo_texto(screen_width/2 - 320, 600 - 60, 600, 200, option_colors[0], "variable = 0")
-    dibujar_parrafo_texto(screen_width/2 + 320, 600 - 60, 600, 200, option_colors[1], "int variable = 0")
-    dibujar_parrafo_texto(screen_width/2 - 320, 850 - 60, 600, 200, option_colors[2], "def variable():")
-    dibujar_parrafo_texto(screen_width/2 + 320, 850 - 60, 600, 200, option_colors[3], "declare int")
+    for pregunta in arreglo_preguntas:
+        dibujar_encabezado_texto(screen_width/2 - x + pregunta_i*screen_width, 300 - 60, 1600, 300, header_color, pregunta.enunciado)
+        dibujar_parrafo_texto(screen_width/2 - 320 - x + pregunta_i*screen_width, 600 - 60, 600, 200, option_colors[0], pregunta.opciones[0])
+        dibujar_parrafo_texto(screen_width/2 + 320 - x + pregunta_i*screen_width, 600 - 60, 600, 200, option_colors[1], pregunta.opciones[1])
+        dibujar_parrafo_texto(screen_width/2 - 320 - x + pregunta_i*screen_width, 850 - 60, 600, 200, option_colors[2], pregunta.opciones[2])
+        dibujar_parrafo_texto(screen_width/2 + 320 - x + pregunta_i*screen_width, 850 - 60, 600, 200, option_colors[3], pregunta.opciones[3])
+        pregunta_i+= 1
     
-    dibujar_estadistica_texto(30, 1080 - 120, "# nombre del jugador", "plyr = \"ElMaikina\"")
-    dibujar_estadistica_texto(800, 1080 - 120, "# tiempo restante", "T = 35:46")
-    dibujar_estadistica_texto(1400, 1080 - 120, "# arreglo de preguntas totales", "P = [0, 0, 0, 0, 0, 0, 0, 0]")
+    dibujar_estadistica_texto(160, 60, "# enunciado de la pregunta", "")
+    dibujar_estadistica_texto(30, 1080 - 120, "# nombre del jugador", "player = \"ElMaikina\"")
+    dibujar_estadistica_texto(800, 1080 - 120, "# tiempo restante", "time = 35:46")
+    dibujar_estadistica_texto(1350, 1080 - 120, "# arreglo de preguntas totales", "questions = [0, 0, 0, 0, 0, 0, 0, 0]")
     
     
     # Actualiza la pantalla

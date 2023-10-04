@@ -1,0 +1,6 @@
+{
+    "server_ip": "",
+    "server_port": 5050,
+    "header": 64,
+    "format": "utf-8"
+}

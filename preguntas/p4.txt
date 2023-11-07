@@ -1,0 +1,6 @@
+¿Cuál es el tipo de dato de la variable en Python que puede almacenar una secuencia de elementos inmutables?
+int
+str
+list
+tuple
+4

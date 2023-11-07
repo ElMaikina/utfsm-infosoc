@@ -46,6 +46,7 @@ input_rect_rut = pygame.Rect(   int(screen_width*0.4),  5*int(screen_height*0.1)
 # Para recorrer las preguntas
 input_rect_next = pygame.Rect(   int(screen_width*0.25),  int(screen_height*0.75),  int(screen_width*0.2),   int(screen_height*0.15))
 input_rect_back = pygame.Rect(   int(screen_width*0.55),  int(screen_height*0.75),  int(screen_width*0.2),   int(screen_height*0.15))
+input_rect_start = pygame.Rect(  int(screen_width*0.3),  int(screen_height*0.75),  int(screen_width*0.4),   int(screen_height*0.15))
 
 # Colores de las cajas de las respuestas
 input_rect_answers = []
@@ -114,6 +115,22 @@ while running:
                         rut += event.unicode
         
         elif event.type == MOUSEBUTTONDOWN:
+            if not registered:
+                if event.button == 1 and input_rect_start.collidepoint(pygame.mouse.get_pos()):
+                    print(f"Nombre: {name}\nCorreo: {email}\nRut: {rut}")
+                    name = str(name)
+                    email = str(email)
+                    rut = str(rut)
+                    # Registra exitosamente al usuario
+                    if str(name) != "" and str(email) != "" and rut != "":
+                        registered = True
+                    else:
+                        print("Registre un usuario valido!")
+                        trolling = True
+                        name = ""
+                        email = ""
+                        rut = ""
+                
             if registered:
                 if event.button == 1 and pygame.mouse.get_pos()[1] < (screen_height * 0.7):
                     respuesta_click = respuesta_sel
@@ -172,6 +189,15 @@ while running:
             elif input_rect_rut.collidepoint(pygame.mouse.get_pos()):
                 pygame.draw.line(screen, WHITE, (input_rect_rut.x + 5 + font.size(rut)[0], input_rect_rut.y + 0),
                                  (input_rect_rut.x + 5 + font.size(rut)[0], input_rect_rut.y + 5 + font.get_height()))
+        
+        # Para ir hacia adelante
+        if input_rect_start.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(screen, selection_color, input_rect_start)
+        elif not input_rect_start.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(screen, input_color, input_rect_start)
+            
+        display_header("Empezar", int(screen_width*0.38), int(screen_height*0.8))
+
 
     # Si ya se registro, mostrar las preguntas
     if registered:    

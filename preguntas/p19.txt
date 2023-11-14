@@ -1,0 +1,6 @@
+A = True, B = False, print(A or B) 
+Verdadero
+False
+Falso
+True
+4

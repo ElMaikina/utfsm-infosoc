@@ -1,0 +1,6 @@
+¿Cómo se declara un string en Python?
+s = “¡Hola, Mundo!”
+“¡Hola, Mundo!” = s
+s = *¡Hola, Mundo!*
+s = ¡Hola, Mundo!
+1

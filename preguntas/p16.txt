@@ -1,0 +1,6 @@
+¿Cómo se saca el módulo/resto de una división en Python? 
+//
+#
+/
+%
+4

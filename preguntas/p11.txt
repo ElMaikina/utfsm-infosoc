@@ -1,0 +1,6 @@
+¿Cómo se declara un booleano en Python?
+b == True
+b = True
+b = Falso
+b = Verdadero
+2

@@ -1,0 +1,6 @@
+¿Qué hace la operación lógica not?
+Cambia una condición verdadera a falsa y viceversa. Es como decir lo contrario.
+Ambas condiciones tienen que ser verdaderas para que se cumpla la regla.
+Cambia una condición verdadera a falsa y viceversa. Es como decir lo mismo.
+Solo una de las condiciones debe ser verdadera para que se cumpla la regla.
+1

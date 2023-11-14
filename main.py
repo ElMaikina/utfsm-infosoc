@@ -53,6 +53,7 @@ input_rect_rut = pygame.Rect(   int(screen_width*0.4),  5*int(screen_height*0.1)
 input_rect_next = pygame.Rect(   int(screen_width*0.25),  int(screen_height*0.75),  int(screen_width*0.2),   int(screen_height*0.15))
 input_rect_back = pygame.Rect(   int(screen_width*0.55),  int(screen_height*0.75),  int(screen_width*0.2),   int(screen_height*0.15))
 input_rect_start = pygame.Rect(  int(screen_width*0.3),  int(screen_height*0.75),  int(screen_width*0.4),   int(screen_height*0.15))
+input_rect_run = pygame.Rect(   int(screen_width*0.65),  int(screen_height*0.2),  int(screen_width*0.175),   int(screen_height*0.175))
 
 # Colores de las cajas de las respuestas
 input_rect_answers = []
@@ -62,7 +63,7 @@ input_rect_answers.append(pygame.Rect(  int(screen_width*0.2),  5*int(screen_hei
 input_rect_answers.append(pygame.Rect(  int(screen_width*0.2),  6*int(screen_height*0.1),  int(screen_width*0.6),   int(screen_height*0.05)))
 
 # Box de texto para insertar codigo
-input_rect_question = pygame.Rect(  int(screen_width*0.2),  2*int(screen_height*0.1),  int(screen_width*0.6),   int(screen_height*0.5))
+input_rect_question = pygame.Rect(  int(screen_width*0.2),  2*int(screen_height*0.1),  int(screen_width*0.4),   int(screen_height*0.5))
 input_rect_answer = pygame.Rect(  int(screen_width*0.2),  2*int(screen_height*0.1),  int(screen_width*0.6),   int(screen_height*0.4))
 
 name = ""
@@ -107,6 +108,9 @@ while running:
                     # Registra exitosamente al usuario
                     if str(name) != "" and str(email) != "" and rut != "":
                         registered = True
+
+                    # TODO: hacer un codigo que verifique con la base de
+                    # datos las credenciales del login
                     else:
                         print("Registre un usuario valido!")
                         trolling = True
@@ -166,6 +170,7 @@ while running:
             if registered:
                 if event.button == 1 and pygame.mouse.get_pos()[1] < (screen_height * 0.7) and pregunta_actual < len(todas_las_preguntas):
                     respuesta_click = respuesta_sel
+                    # TODO: hacer un codigo que envie las preguntas al excel
                     print("Se eligio la respuesta " + str(respuesta_click))
                 
                 if event.button == 1 and input_rect_back.collidepoint(pygame.mouse.get_pos()):
@@ -174,6 +179,7 @@ while running:
                         pregunta_actual = len(todas_las_preguntas) + len(todo_el_desarrollo) - 1
 
                     print("Pregunta actual " + str(pregunta_actual))
+                    # TODO: hacer un codigo que envie las preguntas al excel
                     respuesta_abierta = ""
                 
                 if event.button == 1 and input_rect_next.collidepoint(pygame.mouse.get_pos()):
@@ -182,6 +188,7 @@ while running:
                         pregunta_actual = 0
                     
                     print("Pregunta actual " + str(pregunta_actual))
+                    # TODO: hacer un codigo que envie las preguntas al excel
                     respuesta_abierta = ""
 
     # Alternar la visibilidad del cursor cada 500 ms
@@ -265,6 +272,14 @@ while running:
 
         # Preguntas de desarrollo
         if pregunta_actual >= len(todas_las_preguntas):
+
+            if input_rect_run.collidepoint(pygame.mouse.get_pos()):
+                pygame.draw.rect(screen, selection_color, input_rect_run)  
+            elif not input_rect_run.collidepoint(pygame.mouse.get_pos()):
+                pygame.draw.rect(screen, input_color, input_rect_run)
+
+            display_header("Run", int(screen_width*0.7), int(screen_height*0.252))
+
             desarrollo_actual = pregunta_actual - len(todas_las_preguntas)
             pygame.draw.rect(screen, input_color, input_rect_question)
             lineas = respuesta_abierta.split("\n")

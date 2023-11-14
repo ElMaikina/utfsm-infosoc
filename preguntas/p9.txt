@@ -1,6 +1,6 @@
-¿Qué es un string en Python?
-Son cadenas de caracteres representan secuencias de caracteres, como letras, números, símbolos y espacios. Se define con ‘’ o “”.
-Son cadenas de caracteres representan secuencias de caracteres, como letras, números, símbolos y espacios. Se define con ^^ o “”.
-Son cadenas de caracteres representan secuencias de caracteres, como letras, números, símbolos y espacios. Se define con ‘’ o **.
-Son cadenas de caracteres representan secuencias de caracteres, como letras, números, símbolos y espacios. Se define con ‘’ o {}.
+¿Como se define un String en Python?
+Se define con ‘’ o “”."
+Se define con ^^ o “”."
+Se define con ‘’ o **."
+Se define con ‘’ o {}."
 1

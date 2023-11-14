@@ -191,6 +191,11 @@ while running:
                     # TODO: hacer un codigo que envie las preguntas al excel
                     respuesta_abierta = ""
 
+
+                if event.button == 1 and input_rect_run.collidepoint(pygame.mouse.get_pos()):
+                    print("Se envio la pregunta a la API")
+                    # TODO: enviar respuesta a a la API
+
     # Alternar la visibilidad del cursor cada 500 ms
     cursor_timer += 1
     if cursor_timer >= 300:

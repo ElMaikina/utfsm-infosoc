@@ -11,10 +11,19 @@ class Pregunta:
     def __str__(self):
         return f"Pregunta: {self.pregunta}\nOpciones: {', '.join(self.opciones)}\nRespuesta: {self.respuesta}"
 
+# Clase que sirve para responder la parte de desarrollo
+class Desarrollo:
+    def __init__(self, pregunta):
+        self.pregunta = pregunta
+        self.respuesta = ""
+
+    def __str__(self):
+        return f"Pregunta: {self.pregunta}\nRespuesta: {self.respuesta}"
+
 # Función para cargar preguntas de un archivo
 def cargar_preguntas(archivo):
     preguntas = []
-    with open(archivo, "r") as file:
+    with open(archivo, "r", encoding="utf-8") as file:
         lines = file.readlines()
         pregunta = lines[0].strip()  # La primera línea es la pregunta
         opciones = []
@@ -31,6 +40,14 @@ def cargar_preguntas(archivo):
     random.shuffle(preguntas)
     return preguntas
 
+# Función para cargar preguntas de un archivo
+def cargar_desarrollo(archivo):
+    with open(archivo, "r", encoding="utf-8") as file:
+        contexto = file.read()
+        pregunta = Desarrollo(contexto)
+        print(pregunta)
+        return pregunta
+
 # Carga todas las preguntas
 def cargar_todas_las_preguntas():
     carpeta_preguntas = "preguntas/"
@@ -45,3 +62,16 @@ def cargar_todas_las_preguntas():
 
     return todas_las_preguntas
 
+# Carga todas las preguntas de desarrollo
+def cargar_todo_el_desarrollo():
+    carpeta_preguntas = "desarrollo/"
+    archivos = os.listdir(carpeta_preguntas)
+    todas_las_preguntas = []
+
+    for archivo in archivos:
+        if archivo.endswith(".txt"):
+            ruta_archivo = os.path.join(carpeta_preguntas, archivo)
+            preguntas = cargar_desarrollo(ruta_archivo)
+            todas_las_preguntas.append(preguntas)
+            
+    return todas_las_preguntas

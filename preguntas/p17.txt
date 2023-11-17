@@ -1,0 +1,6 @@
+¿Qué es sintaxis en lenguajes de programación?
+La forma en que se organizan las palabras clave y la puntuación en un programa.
+La capacidad de un programa para realizar operaciones matemáticas.
+El proceso de ejecución y corrección de un código.
+La velocidad a la que se ejecuta un programa.
+1

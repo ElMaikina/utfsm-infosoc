@@ -1,7 +1,8 @@
 import socket
 import threading
 import json
-from sending_weas import autenticar, insertar_valores
+from sending_weas import autenticar, insertar_valores, obtener_indice
+from pathlib import Path
 
 '''
 TO DO:
@@ -12,7 +13,8 @@ TO DO:
 *probar la wea desde otro pc
 '''
 
-with open('server/config.json','r') as config_file:
+script_path = Path(__file__, '..').resolve()
+with open(script_path.joinpath('config.json'),'r') as config_file:
     config = json.load(config_file)
 
 HEADER = config["header"]     #tamaño del mensaje que incluye el tamano de lo que se quiere mandar xd  
@@ -28,9 +30,17 @@ server.bind(ADDR)
 
 credenciales = autenticar()
 
+def send(msg, conn):
+    message = msg.encode(FORMAT)
+    msg_length = len(message)
+    send_length = str(msg_length).encode(FORMAT)
+    send_length += b' ' * (HEADER-len(send_length))
+    conn.send(send_length)
+    conn.send(message)
+
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected")
-
+    index_in_spreadsheet = -1
     connected = True
     while connected:
         msg_length = conn.recv(HEADER).decode(FORMAT)   #parametro: cuantos bytes vamos a aceptar
@@ -41,14 +51,34 @@ def handle_client(conn, addr):
                 connected = False
             else:
                 datos_recibidos = json.loads(msg)
-                insertar_valores(datos_recibidos["rut"], datos_recibidos["correo"], datos_recibidos["puntos_quiz"], datos_recibidos["puntos_codigo"], datos_recibidos["total"], credenciales)
+
+                if(datos_recibidos["tipo"]=="sending" and index_in_spreadsheet != -1):   #es datos a insertar
+                    insertar_valores(datos_recibidos["puntos_quiz"], datos_recibidos["puntos_codigo"], datos_recibidos["total"], index_in_spreadsheet,credenciales)
+                    send("1", conn)
+                elif(index_in_spreadsheet == -1 and datos_recibidos["tipo"]=="sending"):
+                    print(f"[{addr}] Insercion invalida: no se ha validado posicion en spreadsheet")
+                    send("-1", conn)
+                elif(datos_recibidos["tipo"] == "verify"):
+                    verification_output = obtener_indice(datos_recibidos["rut"], datos_recibidos["email"], credenciales)
+                    if(verification_output>0): #se encontro
+                        index_in_spreadsheet = verification_output
+                        print(f"[{addr}] Posicion en spreadsheet encontrada: {index_in_spreadsheet}")
+                        send("1", conn)
+                    elif(verification_output == -1):    #correo no encontrado
+                        print(f"[{addr}] Error verificacion: correo ingresado no encontrado")
+                        send("-1", conn)
+                    elif(verification_output == -2):
+                        print(f"[{addr}] Error de verificacion: correo y rut no coinciden")
+                        send("-2", conn)
+
             print(f"[{addr}] {msg}")
     conn.close()
 
 def start():
     server.listen()
     print(f"[LISTENING] Server is listening on {SERVER}")
-    while True:
+    continuar = True
+    while continuar:
         conn, addr = server.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()

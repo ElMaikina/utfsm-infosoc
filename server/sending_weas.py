@@ -4,13 +4,14 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from pathlib import Path
 
 #Constantes
 NUMERO_ALUMNOS = 9
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "18AX5ZbuK4wVRcN1gvTOL4fAGFjvK8QHlfUywbjXNbtQ" #id de la speadsheet, esta es la de prueba que hice xd
 
-
+script_path = Path(__file__, '..').resolve()
 
 #el credentials.json aqui son del proyecto de prueba que hice, no se si vamos a hacer uno a parte xd
 def autenticar():
@@ -21,33 +22,43 @@ def autenticar():
         if credentials and credentials.expired and credentials.refresh_token:
             credentials.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file("server/credentials.json",SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(script_path.joinpath('credentials.json'),SCOPES)
             credentials = flow.run_local_server(port=0)
         with open("token.json", "w") as token:
             token.write(credentials.to_json())
     
     return credentials
 
-'''
-Si se puede, identificar de antes un rut con una fila en un diccionario
-'''
-def insertar_valores(rut: str, correo: str, puntos_quiz: int, puntos_codigo: int, total: int, credenciales):
+def obtener_indice(rut: str, email: str, credenciales):
     try:
         service = build("sheets", "v4", credentials=credenciales)
         sheets = service.spreadsheets()
 
         #buscar la fila del alumno en la spreadsheet
-        ruts = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range=f"Hoja1!A2:A{NUMERO_ALUMNOS+2}").execute()
-        ruts = ruts.get("values",[])
+        ruts_emails = sheets.values().get(spreadsheetId=SPREADSHEET_ID, range=f"Hoja1!A2:B{NUMERO_ALUMNOS+2}").execute()
+        ruts_emails = ruts_emails.get("values",[])
         index = 2
-        for line in ruts:
-            if(line[0]==rut):
-                break
+        for line in ruts_emails:
+            if(line[1]==email): #encontre el correo
+                if(line[0] == rut): #el correo matchea con el rut
+                    return index
+                else:
+                    return -2 #encontre el correo, pero el rut no calza
+            
             index+=1
-        if index < NUMERO_ALUMNOS+2: #se encontro el rut
-            sheets.values().update(spreadsheetId=SPREADSHEET_ID, range=f"Hoja1!B{index}:G{index}", valueInputOption="USER_ENTERED", body = {"values": [[correo, puntos_quiz, puntos_codigo, "comentarios equisde", total, "completado"]]}).execute()
-        else:
-            print(f"rut {rut} no encontrado")
+        return -1 #no encontre el correo
+    except HttpError as error:
+        print(error)
+
+
+'''
+Si se puede, identificar de antes un rut con una fila en un diccionario
+'''
+def insertar_valores(puntos_quiz: int, puntos_codigo: int, total: int, index: int, credenciales):
+    try:
+        service = build("sheets", "v4", credentials=credenciales)
+        sheets = service.spreadsheets()
+        sheets.values().update(spreadsheetId=SPREADSHEET_ID, range=f"Hoja1!C{index}:G{index}", valueInputOption="USER_ENTERED", body = {"values": [[puntos_quiz, puntos_codigo, "comentarios equisde", total, "completado"]]}).execute()
     except HttpError as error:
         print(error)  
 

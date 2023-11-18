@@ -93,8 +93,7 @@ letras = ["A", "B", "C", "D"]
 
 # Duracion de la prueba en frames
 # Actualmente dura hora y media
-#tiempo = fps * 60 * 60 * 1.5
-tiempo = fps * 60
+tiempo = fps * 60 * 60 * 1.5
 
 #todo_el_desarrollo[desarrollo_actual].respuesta = ""
 
@@ -374,7 +373,7 @@ while running:
         for i in range(len(todo_el_desarrollo) - 1):
             desarrollo_actual = todo_el_desarrollo[i]
             print("Se envio la pregunta a la API")
-            diccionario_respuesta = {'dato':todo_el_desarrollo[desarrollo_actual].respuesta,'tipo':str(todo_el_desarrollo[desarrollo_actual].tipo)}
+            diccionario_respuesta = {'dato':desarrollo_actual.respuesta,'tipo':str(desarrollo_actual.tipo)}
             estado_respuesta = get(diccionario_respuesta)
 
             if estado_respuesta:

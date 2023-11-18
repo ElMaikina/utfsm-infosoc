@@ -1,1 +1,2 @@
-Haga un programa en Python que diga la hora actual 2
+Ejercicio de tipo sumatoria
+Sumatoria

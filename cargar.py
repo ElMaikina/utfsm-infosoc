@@ -7,18 +7,22 @@ class Pregunta:
         self.pregunta = pregunta
         self.opciones = opciones
         self.respuesta = respuesta
+        self.elegida = -1
 
     def __str__(self):
-        return f"Pregunta: {self.pregunta}\nOpciones: {', '.join(self.opciones)}\nRespuesta: {self.respuesta}"
+        return f"Pregunta: {self.pregunta}\nOpciones: {', '.join(self.opciones)}\nRespuesta: {self.respuesta}\nElegida: {self.elegida}"
 
 # Clase que sirve para responder la parte de desarrollo
 class Desarrollo:
-    def __init__(self, pregunta):
+    def __init__(self, pregunta, tipo):
         self.pregunta = pregunta
         self.respuesta = ""
+        self.intentos = 3
+        self.puntaje = -1
+        self.tipo = tipo
 
     def __str__(self):
-        return f"Pregunta: {self.pregunta}\nRespuesta: {self.respuesta}"
+        return f"Pregunta: {self.pregunta}\nRespuesta: {self.respuesta}\nTipo: {self.tipo}\nIntentos: {self.intentos}\nPuntaje: {self.puntaje}"
 
 # Función para cargar preguntas de un archivo
 def cargar_preguntas(archivo):
@@ -37,14 +41,15 @@ def cargar_preguntas(archivo):
         print(pregunta)
         preguntas.append(pregunta)
 
-    random.shuffle(preguntas)
     return preguntas
 
 # Función para cargar preguntas de un archivo
 def cargar_desarrollo(archivo):
     with open(archivo, "r", encoding="utf-8") as file:
-        contexto = file.read()
-        pregunta = Desarrollo(contexto)
+        lines = file.readlines()
+        contexto = lines[0].strip()
+        tipo = lines[1].strip()
+        pregunta = Desarrollo(contexto, tipo)
         print(pregunta)
         return pregunta
 
@@ -60,6 +65,8 @@ def cargar_todas_las_preguntas():
             preguntas = cargar_preguntas(ruta_archivo)
             todas_las_preguntas.extend(preguntas)
 
+    random.shuffle(todas_las_preguntas)
+    todas_las_preguntas = todas_las_preguntas[0:20]
     return todas_las_preguntas
 
 # Carga todas las preguntas de desarrollo
@@ -73,5 +80,6 @@ def cargar_todo_el_desarrollo():
             ruta_archivo = os.path.join(carpeta_preguntas, archivo)
             preguntas = cargar_desarrollo(ruta_archivo)
             todas_las_preguntas.append(preguntas)
-            
+
+    random.shuffle(todas_las_preguntas)            
     return todas_las_preguntas

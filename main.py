@@ -1,7 +1,11 @@
 import pygame
+import sys
 from pygame.locals import *
 from validar import *
 from cargar import *
+from client import *
+from client_main import *
+from conexion_api import *
 
 # Inicializar Pygame
 pygame.init()
@@ -70,10 +74,13 @@ name = ""
 email = ""
 rut = ""
 puntaje = 0
+puntos_desarrollo = 0
 cursor_visible = True
 cursor_timer = 0
 
 # Bucle principal
+clock = pygame.time.Clock()
+fps = 60
 running = True
 registered = False
 trolling = False
@@ -84,7 +91,14 @@ todas_las_preguntas = cargar_todas_las_preguntas()
 todo_el_desarrollo = cargar_todo_el_desarrollo()
 letras = ["A", "B", "C", "D"]
 
-respuesta_abierta = ""
+# Duracion de la prueba en frames
+# Actualmente dura hora y media
+#tiempo = fps * 60 * 60 * 1.5
+tiempo = fps * 60
+
+#todo_el_desarrollo[desarrollo_actual].respuesta = ""
+
+connect_to_server()
 
 while running:
     for event in pygame.event.get():
@@ -93,11 +107,11 @@ while running:
         elif event.type == KEYDOWN:            
             if event.key == K_SPACE:
                 if registered and pregunta_actual >= len(todas_las_preguntas):
-                    respuesta_abierta += " "
+                    todo_el_desarrollo[desarrollo_actual].respuesta += " "
     
             if event.key == K_TAB:
                 if registered and pregunta_actual >= len(todas_las_preguntas):
-                    respuesta_abierta += "    "
+                    todo_el_desarrollo[desarrollo_actual].respuesta += "    "
 
             elif event.key == K_RETURN:
                 if not registered:
@@ -106,12 +120,11 @@ while running:
                     email = str(email)
                     rut = str(rut)
                     # Registra exitosamente al usuario
-                    if str(name) != "" and str(email) != "" and rut != "":
+                    if verify_email_rut(email, rut) == 1:
                         registered = True
-
-                    # TODO: hacer un codigo que verifique con la base de
-                    # datos las credenciales del login
-                    else:
+                    
+                    if verify_email_rut(email, rut) != 1:
+                        registered = False
                         print("Registre un usuario valido!")
                         trolling = True
                         name = ""
@@ -119,7 +132,7 @@ while running:
                         rut = ""
                 
                 if registered and pregunta_actual >= len(todas_las_preguntas):
-                    respuesta_abierta += "\n"
+                    todo_el_desarrollo[desarrollo_actual].respuesta += "\n"
 
             elif event.key == K_BACKSPACE:
                 if not registered:
@@ -134,9 +147,9 @@ while running:
                             rut = rut[:-1]
         
                 if registered and pregunta_actual >= len(todas_las_preguntas):
-                    largo = len(respuesta_abierta)
+                    largo = len(todo_el_desarrollo[desarrollo_actual].respuesta)
                     largo -= 1
-                    respuesta_abierta = respuesta_abierta[:largo]
+                    todo_el_desarrollo[desarrollo_actual].respuesta = todo_el_desarrollo[desarrollo_actual].respuesta[:largo]
 
             else:
                 if not registered:
@@ -148,7 +161,7 @@ while running:
                         rut += event.unicode
 
                 if registered and pregunta_actual >= len(todas_las_preguntas):
-                    respuesta_abierta += event.unicode
+                    todo_el_desarrollo[desarrollo_actual].respuesta += event.unicode
         
         elif event.type == MOUSEBUTTONDOWN:
             if not registered:
@@ -158,9 +171,11 @@ while running:
                     email = str(email)
                     rut = str(rut)
                     # Registra exitosamente al usuario
-                    if str(name) != "" and str(email) != "" and rut != "":
+                    if verify_email_rut(email, rut) == 1:
                         registered = True
-                    else:
+                    
+                    if verify_email_rut(email, rut) != 1:
+                        registered = False
                         print("Registre un usuario valido!")
                         trolling = True
                         name = ""
@@ -170,8 +185,18 @@ while running:
             if registered:
                 if event.button == 1 and pygame.mouse.get_pos()[1] < (screen_height * 0.7) and pregunta_actual < len(todas_las_preguntas):
                     respuesta_click = respuesta_sel
-                    # TODO: hacer un codigo que envie las preguntas al excel
+                    todas_las_preguntas[pregunta_actual].elegida = respuesta_click + 1
                     print("Se eligio la respuesta " + str(respuesta_click))
+                    print(todas_las_preguntas[pregunta_actual])
+                    # TODO: hacer un codigo que envie las preguntas al excel
+
+                    # SE CONECTA CON LA API PARA MANDAR LAS DE AL;TERNATIVA
+                    #print("Se eligio la respuesta " + str(respuesta_click))
+                    #output = send_data(rut, email, puntaje, puntos_desarrollo, puntaje+puntos_desarrollo)
+                    #if output == 1:
+                    #    print("Se mando la respuesta al server!")
+                    #if output != 1:
+                    #    print("No se mando la respuesta al server!")
                 
                 if event.button == 1 and input_rect_back.collidepoint(pygame.mouse.get_pos()):
                     pregunta_actual += 1
@@ -180,7 +205,7 @@ while running:
 
                     print("Pregunta actual " + str(pregunta_actual))
                     # TODO: hacer un codigo que envie las preguntas al excel
-                    respuesta_abierta = ""
+                    #todo_el_desarrollo[desarrollo_actual].respuesta = ""
                 
                 if event.button == 1 and input_rect_next.collidepoint(pygame.mouse.get_pos()):
                     pregunta_actual -= 1
@@ -189,11 +214,27 @@ while running:
                     
                     print("Pregunta actual " + str(pregunta_actual))
                     # TODO: hacer un codigo que envie las preguntas al excel
-                    respuesta_abierta = ""
+                    #todo_el_desarrollo[desarrollo_actual].respuesta = ""
 
+                if pregunta_actual >= len(todas_las_preguntas):
+                    if event.button == 1 and input_rect_run.collidepoint(pygame.mouse.get_pos()):
+                        if todo_el_desarrollo[desarrollo_actual].intentos > 0:
+                            print("Se envio la pregunta a la API")
+                            diccionario_respuesta = {'dato':todo_el_desarrollo[desarrollo_actual].respuesta,'tipo':str(todo_el_desarrollo[desarrollo_actual].tipo)}
+                            estado_respuesta = get(diccionario_respuesta)
 
-                if event.button == 1 and input_rect_run.collidepoint(pygame.mouse.get_pos()):
-                    print("Se envio la pregunta a la API")
+                            if estado_respuesta:
+                                print("Respuesta valida")
+                                todo_el_desarrollo[desarrollo_actual].puntaje = 1
+                            if not estado_respuesta:
+                                print("Respuesta invalida")
+                                todo_el_desarrollo[desarrollo_actual].puntaje = 0
+
+                            todo_el_desarrollo[desarrollo_actual].intentos -= 1
+
+                        if todo_el_desarrollo[desarrollo_actual].intentos < 1:
+                            print("Se acabaron los intentos")
+
                     # TODO: enviar respuesta a a la API
 
     # Alternar la visibilidad del cursor cada 500 ms
@@ -246,8 +287,8 @@ while running:
 
 
     # Si ya se registro, mostrar las preguntas
-    if registered:
-
+    if registered and tiempo > 0:
+        tiempo -=1
         # Preguntas de alternativa
         if pregunta_actual < len(todas_las_preguntas):
             display_header(todas_las_preguntas[pregunta_actual].pregunta[:52], int(screen_width*0.05), int(screen_height*0.1))
@@ -287,13 +328,21 @@ while running:
 
             desarrollo_actual = pregunta_actual - len(todas_las_preguntas)
             pygame.draw.rect(screen, input_color, input_rect_question)
-            lineas = respuesta_abierta.split("\n")
+            lineas = todo_el_desarrollo[desarrollo_actual].respuesta.split("\n")
             offset = 0
             display_header(todo_el_desarrollo[desarrollo_actual].pregunta, int(screen_width*0.05), int(screen_height*0.1))
             
             for linea in lineas:
                 display_code(f"{linea}", input_rect_answer.x + 5, input_rect_answer.y + 5 + offset*20)
                 offset += 1
+            
+            if (todo_el_desarrollo[desarrollo_actual].puntaje == 0):
+                display_text("Pregunta incorrecta!", int(screen_width*0.7), int(screen_height*0.4))
+                display_text("Intentos: " + str(todo_el_desarrollo[desarrollo_actual].intentos), int(screen_width*0.7), int(screen_height*0.5))
+
+            if (todo_el_desarrollo[desarrollo_actual].puntaje > 0):
+                display_text("Pregunta correcta!", int(screen_width*0.7), int(screen_height*0.4))
+                display_text("Intentos: " + str(todo_el_desarrollo[desarrollo_actual].intentos), int(screen_width*0.7), int(screen_height*0.5))
 
         # La seccion de navegacion
 
@@ -313,8 +362,46 @@ while running:
 
         display_header("Next", int(screen_width*0.585), int(screen_height*0.8))
 
+    if registered and tiempo <= 1:
+        puntaje = 0
+        puntos_desarrollo = 0
+        for i in range(len(todas_las_preguntas) - 1):
+            pregunta_subida = todas_las_preguntas[i]
+            print("Correcta: " + str(pregunta_subida.respuesta) + ", Elegida: " + str(pregunta_subida.elegida))
+            if int(pregunta_subida.respuesta) == int(pregunta_subida.elegida):
+                puntaje += 1
 
-    pygame.display.flip()
+        for i in range(len(todo_el_desarrollo) - 1):
+            desarrollo_actual = todo_el_desarrollo[i]
+            print("Se envio la pregunta a la API")
+            diccionario_respuesta = {'dato':todo_el_desarrollo[desarrollo_actual].respuesta,'tipo':str(todo_el_desarrollo[desarrollo_actual].tipo)}
+            estado_respuesta = get(diccionario_respuesta)
+
+            if estado_respuesta:
+                print("Respuesta valida")
+                puntos_desarrollo += 4
+            if not estado_respuesta:
+                print("Respuesta invalida")
+
+        print("Puntaje de alternativas: " + str(puntaje))
+        print("Puntaje de desarrollo: " + str(puntos_desarrollo))
+            
+        output = send_data(rut, email, puntaje, puntos_desarrollo, puntaje+puntos_desarrollo)
+
+        if output == 1:
+            print("Se mandaron las preguntas al server!")
+        if output != 1:
+            print("No se mando la respuesta al server!")
+        
+        # Salir de Pygame
+        running = False
+
+    #pygame.display.flip()
+    pygame.display.update()
+    clock.tick(fps)
+    #print("Tiempo restante: " + str(tiempo))
 
 # Salir de Pygame
+disconnect_from_server()
 pygame.quit()
+

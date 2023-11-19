@@ -1,9 +1,10 @@
 import socket
 import json
+from pathlib import Path
 
-with open('config.json','r') as config_file:
+script_path = Path(__file__, '..').resolve()
+with open(script_path.joinpath('config.json'),'r') as config_file:
     config = json.load(config_file)
-
 
 HEADER = config["header"]     #tamaño del mensaje que incluye el tamano de lo que se quiere mandar xd  
 PORT = config["server_port"]    #puerto: 5050 suele servir

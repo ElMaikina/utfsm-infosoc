@@ -38,6 +38,8 @@ def send(msg, conn):
     conn.send(send_length)
     conn.send(message)
 
+lock = threading.Lock()
+
 def handle_client(conn, addr):
     print(f"[NEW CONNECTION] {addr} connected")
     index_in_spreadsheet = -1
@@ -54,6 +56,9 @@ def handle_client(conn, addr):
 
                 if(datos_recibidos["tipo"]=="sending" and index_in_spreadsheet != -1):   #es datos a insertar
                     insertar_valores(datos_recibidos["puntos_quiz"], datos_recibidos["puntos_codigo"], datos_recibidos["total"], index_in_spreadsheet,credenciales)
+                    with lock:
+                        with open(script_path.joinpath("LOG.txt"), 'a') as log_file:
+                            log_file.write(f'rut: {datos_recibidos["rut"]}, puntos quiz: {datos_recibidos["puntos_quiz"]}, puntos codigo: {datos_recibidos["puntos_codigo"]}')
                     send("1", conn)
                 elif(index_in_spreadsheet == -1 and datos_recibidos["tipo"]=="sending"):
                     print(f"[{addr}] Insercion invalida: no se ha validado posicion en spreadsheet")

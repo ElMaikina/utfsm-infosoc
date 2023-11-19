@@ -4,7 +4,6 @@ from pygame.locals import *
 from validar import *
 from cargar import *
 from client import *
-from client_main import *
 from conexion_api import *
 
 # Inicializar Pygame
@@ -383,7 +382,7 @@ while running:
     #print("Tiempo restante: " + str(tiempo))
 
 # Salir de Pygame
-disconnect_from_server()
+
 
 # Asigna los puntajes finales
 puntaje = 0
@@ -417,5 +416,6 @@ if output == 1:
 if output != 1:
     print("No se mando la respuesta al server!")
 
+disconnect_from_server()
 pygame.quit()
 

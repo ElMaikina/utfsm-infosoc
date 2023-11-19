@@ -1,6 +1,6 @@
 Existen dos bucles en Python ¿Cuál de las siguientes afirmaciones es verdadera respecto a ellos?
-While no necesita de un contador que se vaya incrementando en cambio For si lo necesita.
-While y For son estructuras lógicas.
-While si necesita de un contador que se vaya incrementando en cambio For no lo   necesita.
-While y For no son una parte fundamental de la programación.
+"while" no necesita contador, "for" si.
+"while" y "for" son estructuras lógicas.
+"while" si necesita contador, "for" no.
+Ninguna de las anteriores.
 3

@@ -1,0 +1,6 @@
+Existen dos bucles en Python ¿Cuál de las siguientes afirmaciones es verdadera respecto a ellos?
+"while" no necesita contador, "for" si.
+"while" y "for" son estructuras lógicas.
+"while" si necesita contador, "for" no.
+Ninguna de las anteriores.
+3

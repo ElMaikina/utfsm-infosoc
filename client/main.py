@@ -191,35 +191,17 @@ while running:
                 if event.button == 1 and pygame.mouse.get_pos()[1] < (screen_height * 0.7) and pregunta_actual < len(todas_las_preguntas):
                     respuesta_click = respuesta_sel
                     todas_las_preguntas[pregunta_actual].elegida = respuesta_click + 1
-                    print("Se eligio la respuesta " + str(respuesta_click))
                     print(todas_las_preguntas[pregunta_actual])
-                    # TODO: hacer un codigo que envie las preguntas al excel
-
-                    # SE CONECTA CON LA API PARA MANDAR LAS DE AL;TERNATIVA
-                    #print("Se eligio la respuesta " + str(respuesta_click))
-                    #output = send_data(rut, email, puntaje, puntos_desarrollo, puntaje+puntos_desarrollo)
-                    #if output == 1:
-                    #    print("Se mando la respuesta al server!")
-                    #if output != 1:
-                    #    print("No se mando la respuesta al server!")
-                
+    
                 if event.button == 1 and input_rect_back.collidepoint(pygame.mouse.get_pos()):
                     pregunta_actual += 1
                     if pregunta_actual > len(todas_las_preguntas) + len(todo_el_desarrollo) - 1:
                         pregunta_actual = len(todas_las_preguntas) + len(todo_el_desarrollo) - 1
-
-                    print("Pregunta actual " + str(pregunta_actual))
-                    # TODO: hacer un codigo que envie las preguntas al excel
-                    #todo_el_desarrollo[desarrollo_actual].respuesta = ""
                 
                 if event.button == 1 and input_rect_next.collidepoint(pygame.mouse.get_pos()):
-                    pregunta_actual -= 1
+                    pregunta_actual -= 1                        
                     if pregunta_actual < 0:
                         pregunta_actual = 0
-                    
-                    print("Pregunta actual " + str(pregunta_actual))
-                    # TODO: hacer un codigo que envie las preguntas al excel
-                    #todo_el_desarrollo[desarrollo_actual].respuesta = ""
 
                 if pregunta_actual >= len(todas_las_preguntas):
                     if event.button == 1 and input_rect_run.collidepoint(pygame.mouse.get_pos()):
@@ -296,6 +278,7 @@ while running:
         #tiempo -=1
         # Preguntas de alternativa
         if pregunta_actual < len(todas_las_preguntas):
+            respuesta_click = todas_las_preguntas[pregunta_actual].elegida - 1
             display_header(todas_las_preguntas[pregunta_actual].pregunta[:52], int(screen_width*0.05), int(screen_height*0.1))
             display_header(todas_las_preguntas[pregunta_actual].pregunta[52:90], int(screen_width*0.05), int(screen_height*0.15))
             display_header(todas_las_preguntas[pregunta_actual].pregunta[90:], int(screen_width*0.05), int(screen_height*0.2))
@@ -310,11 +293,12 @@ while running:
             for opcion in todas_las_preguntas[pregunta_actual].opciones:
                 if letras_index == respuesta_click:
                     pygame.draw.rect(screen, clicked_color, input_rect_answers[respuesta_click])
+
+                elif letras_index == respuesta_sel:
+                    pygame.draw.rect(screen, selection_color, input_rect_answers[letras_index])
+
                 else:
-                    if letras_index == respuesta_sel and letras_index != respuesta_click:
-                        pygame.draw.rect(screen, selection_color, input_rect_answers[letras_index])
-                    else:
-                        pygame.draw.rect(screen, input_color, input_rect_answers[letras_index])
+                    pygame.draw.rect(screen, input_color, input_rect_answers[letras_index])
 
                 display_text(str(letras[letras_index]) + ") "+ str(opcion), int(screen_width*0.2), vertical_offset)
                 vertical_offset += 1*int(screen_height*0.1)
@@ -336,8 +320,15 @@ while running:
             lineas = todo_el_desarrollo[desarrollo_actual].respuesta.split("\n")
             linea_actual = ""
             offset = 0
-            display_header(todo_el_desarrollo[desarrollo_actual].pregunta, int(screen_width*0.05), int(screen_height*0.1))
-            
+
+            #display_header(todo_el_desarrollo[desarrollo_actual].pregunta, int(screen_width*0.05), int(screen_height*0.1))
+            display_code(todo_el_desarrollo[desarrollo_actual].pregunta[:90], int(screen_width*0.025), int(screen_height*0.06))
+            display_code(todo_el_desarrollo[desarrollo_actual].pregunta[90:180], int(screen_width*0.025), int(screen_height*0.09))
+            display_code(todo_el_desarrollo[desarrollo_actual].pregunta[180:270], int(screen_width*0.025), int(screen_height*0.12))
+            display_code(todo_el_desarrollo[desarrollo_actual].pregunta[270:360], int(screen_width*0.025), int(screen_height*0.15))
+            display_code(todo_el_desarrollo[desarrollo_actual].pregunta[360:450], int(screen_width*0.025), int(screen_height*0.18))
+            display_code(todo_el_desarrollo[desarrollo_actual].pregunta[450:], int(screen_width*0.025), int(screen_height*0.21))
+
             for linea in lineas:
                 display_code(f"{linea}", input_rect_answer.x + 5, input_rect_answer.y + 5 + offset*code_font.size(linea_actual)[1])        
                 linea_actual = linea

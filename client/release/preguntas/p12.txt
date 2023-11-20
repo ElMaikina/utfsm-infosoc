@@ -1,0 +1,6 @@
+¿Cómo se declara un flotante en Python?
+f = “1.99”
+1.99 == f
+f = 1.99
+1.99 = f
+3

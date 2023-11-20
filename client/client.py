@@ -1,9 +1,12 @@
 import socket
 import json
+import sys
+import os
 from pathlib import Path
 
-script_path = Path(__file__, '..').resolve()
-with open(script_path.joinpath('config.json'),'r') as config_file:
+#script_path = Path(__file__, '..').resolve()
+script_path = os.path.dirname(sys.executable)
+with open('config.json','r') as config_file:
     config = json.load(config_file)
 
 HEADER = config["header"]     #tamaño del mensaje que incluye el tamano de lo que se quiere mandar xd  

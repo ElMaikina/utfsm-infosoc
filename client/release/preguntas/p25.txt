@@ -1,0 +1,6 @@
+Qué símbolo representa a “Igual que”
+=
+==
+!=
+=!
+2

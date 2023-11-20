@@ -1,0 +1,6 @@
+¿Como se define un String en Python?
+Se define con ‘’ o “”
+Se define con ^^ o “”
+Se define con ‘’ o **
+Se define con ‘’ o {}
+1

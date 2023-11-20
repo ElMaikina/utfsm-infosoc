@@ -1,0 +1,2 @@
+Deberá escribir un código que sume todos los número desde 0 hasta n, con n siendo un número entero que se pide por pantalla y deberá imprimir este resultado, los inputs deben tener el formato input(), si esto no se cumple se considera mala la pregunta.
+Sumatoria

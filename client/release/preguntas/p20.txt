@@ -1,0 +1,6 @@
+¿Qué analogia explica mejor la operación lógica "not"?
+"Es como decir lo contrario."
+"Es cuando dos condiciones son True."
+"Es como decir lo mismo."
+"Es cuando solo una condicion es False."
+1

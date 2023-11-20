@@ -1,0 +1,6 @@
+¿Cuál de las siguientes declaraciones en Python se utiliza para definir una función?
+if
+for
+def
+while
+3

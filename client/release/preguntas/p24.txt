@@ -1,0 +1,6 @@
+Qué símbolo representa a “Menor o igual que”
+<<
+>>
+<=
+=<
+3

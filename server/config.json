@@ -2,5 +2,7 @@
     "server_ip": "",
     "server_port": 5050,
     "header": 64,
-    "format": "utf-8"
+    "format": "utf-8",
+    "spreadsheet_id": "18AX5ZbuK4wVRcN1gvTOL4fAGFjvK8QHlfUywbjXNbtQ",
+    "numero_alumnos": 9
 }

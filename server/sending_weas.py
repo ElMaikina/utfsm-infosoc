@@ -5,11 +5,16 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from pathlib import Path
+import json
 
+
+script_path = Path(__file__, '..').resolve()
+with open(script_path.joinpath('config.json'),'r') as config_file:
+    config = json.load(config_file)
 #Constantes
-NUMERO_ALUMNOS = 9
+NUMERO_ALUMNOS = config["numero_alumnos"]
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = "18AX5ZbuK4wVRcN1gvTOL4fAGFjvK8QHlfUywbjXNbtQ" #id de la speadsheet, esta es la de prueba que hice xd
+SPREADSHEET_ID = config["spreadsheet_id"] #id de la speadsheet, esta es la de prueba que hice xd
 
 script_path = Path(__file__, '..').resolve()
 

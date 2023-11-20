@@ -1,7 +1,7 @@
 import socket
 import threading
 import json
-from sending_weas import autenticar, insertar_valores, obtener_indice
+import mandar_cosas.sending_weas as snd
 from pathlib import Path
 
 '''
@@ -13,8 +13,8 @@ TO DO:
 *probar la wea desde otro pc
 '''
 
-script_path = Path(__file__, '..').resolve()
-with open(script_path.joinpath('config.json'),'r') as config_file:
+
+with open('config.json','r') as config_file:
     config = json.load(config_file)
 
 HEADER = config["header"]     #tamaño del mensaje que incluye el tamano de lo que se quiere mandar xd  
@@ -23,13 +23,13 @@ SERVER = config["server_ip"] #ipv4
 ADDR = (SERVER,PORT)
 FORMAT = config["format"]
 DISCONNECT_MESSAGE = "!DISCONNECT"
-
+snd.NUMERO_ALUMNOS = config["numero_alumnos"]
+snd.SPREADSHEET_ID = config["spreadsheet_id"]
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
-credenciales = autenticar()
-
+credenciales = snd.autenticar()
 def send(msg, conn):
     message = msg.encode(FORMAT)
     msg_length = len(message)
@@ -55,16 +55,16 @@ def handle_client(conn, addr):
                 datos_recibidos = json.loads(msg)
 
                 if(datos_recibidos["tipo"]=="sending" and index_in_spreadsheet != -1):   #es datos a insertar
-                    insertar_valores(datos_recibidos["puntos_quiz"], datos_recibidos["puntos_codigo"], datos_recibidos["total"], index_in_spreadsheet,credenciales)
+                    snd.insertar_valores(datos_recibidos["puntos_quiz"], datos_recibidos["puntos_codigo"], datos_recibidos["total"], index_in_spreadsheet,credenciales)
                     with lock:
-                        with open(script_path.joinpath("LOG.txt"), 'a') as log_file:
+                        with open("LOG.txt", 'a') as log_file:
                             log_file.write(f'rut: {datos_recibidos["rut"]}, puntos quiz: {datos_recibidos["puntos_quiz"]}, puntos codigo: {datos_recibidos["puntos_codigo"]}')
                     send("1", conn)
                 elif(index_in_spreadsheet == -1 and datos_recibidos["tipo"]=="sending"):
                     print(f"[{addr}] Insercion invalida: no se ha validado posicion en spreadsheet")
                     send("-1", conn)
                 elif(datos_recibidos["tipo"] == "verify"):
-                    verification_output = obtener_indice(datos_recibidos["rut"], datos_recibidos["email"], credenciales)
+                    verification_output = snd.obtener_indice(datos_recibidos["rut"], datos_recibidos["email"], credenciales)
                     if(verification_output>0): #se encontro
                         index_in_spreadsheet = verification_output
                         print(f"[{addr}] Posicion en spreadsheet encontrada: {index_in_spreadsheet}")

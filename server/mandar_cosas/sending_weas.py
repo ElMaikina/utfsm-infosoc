@@ -8,15 +8,11 @@ from pathlib import Path
 import json
 
 
-script_path = Path(__file__, '..').resolve()
-with open(script_path.joinpath('config.json'),'r') as config_file:
-    config = json.load(config_file)
 #Constantes
-NUMERO_ALUMNOS = config["numero_alumnos"]
+NUMERO_ALUMNOS = 0
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-SPREADSHEET_ID = config["spreadsheet_id"] #id de la speadsheet, esta es la de prueba que hice xd
+SPREADSHEET_ID =  "" #id de la speadsheet, esta es la de prueba que hice xd
 
-script_path = Path(__file__, '..').resolve()
 
 #el credentials.json aqui son del proyecto de prueba que hice, no se si vamos a hacer uno a parte xd
 def autenticar():
@@ -27,7 +23,7 @@ def autenticar():
         if credentials and credentials.expired and credentials.refresh_token:
             credentials.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(script_path.joinpath('credentials.json'),SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json',SCOPES)
             credentials = flow.run_local_server(port=0)
         with open("token.json", "w") as token:
             token.write(credentials.to_json())

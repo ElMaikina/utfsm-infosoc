@@ -1,6 +1,0 @@
-¿Cuál es la función principal de la declaración "if" en Python?
-Definir una función
-Ejecutar una función
-Tomar decisiones condicionales
-Generar bucles
-4

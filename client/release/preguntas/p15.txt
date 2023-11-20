@@ -1,6 +1,0 @@
-¿Cómo se hace una división entera en Python?
-/
-//
-#
-%
-2

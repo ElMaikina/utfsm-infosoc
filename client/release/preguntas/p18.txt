@@ -1,6 +1,0 @@
-A = True, B = False, print(A and B) 
-True
-Verdadero
-False
-Falso
-3

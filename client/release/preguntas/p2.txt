@@ -1,6 +1,0 @@
-¿Qué se utiliza para representar comentarios en Python?
-Comillas simples (' ')
-Comillas dobles (" ")
-Tres comillas simples (''' ''')
-El símbolo # (almohadilla)
-4

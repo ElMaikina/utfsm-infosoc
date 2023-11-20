@@ -1,2 +1,0 @@
-Deberá escribir un código que permita calcular el área de un triángulo, pidiendo la “altura” y la base de este, después deberá  mostrar por pantalla la solución con un print(), los inputs deben tener el formato input(), si esto no se cumple se considera mala la pregunta.
-Triangulo
